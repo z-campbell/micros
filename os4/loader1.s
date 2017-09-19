@@ -30,6 +30,6 @@ push dword 3
                                             ; stack (end of memory area)
 call sum_of_three
 call fbWrite
-call fbMove
+;call fbMove
 .loop:
 jmp .loop                      ; loop forever

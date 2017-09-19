@@ -5,6 +5,8 @@
 #define FB_DATA_PORT 0x3D5
 #define FB_HIGH_BYTE_COMMAND 14
 #define FB_LOW_BYTE_COMMAND 15
+unsigned short fb_pos = 0;
+unsigned short cursor_pos = 0;
 
 void fb_move_cursor(unsigned short pos) 
 {
@@ -28,16 +30,32 @@ void fb_write_cell(unsigned int i, char c, unsigned char fg, unsigned char bg)
 	fb[i] = c;
 	fb[i+1] = ((fg & 0x0F) << 4) | (bg & 0x0f);
 }
+void fbWrite1(char *buffer,int length)
+{
+        while(*buffer != '\0')
+        {
+                fb_write_cell(2*fb_pos, *buffer, FB_GREEN, FB_DARK_GREY);
+                fb_pos++;
+                fb_move_cursor(fb_pos);
+                buffer++;
+                cursor_pos++;
+		length--;
+        } 
+	while(1);
+}
+
 void fbWrite(void)
 {	
-	int i = 0;
+//	int i = 0;
+	char *buff;
 	char message[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	while(message[i] != '\0')
-	{
-		fb_write_cell((2*i),message[i], FB_GREEN, FB_DARK_GREY);
-		i++;
-	}
-
+	buff = (char *)message;
+//	while(message[i] != '\0')
+//	{
+//		fb_write_cell((2*i),message[i], FB_GREEN, FB_DARK_GREY);
+//		i++;
+//	}
+	fbWrite1(buff,25);
 	//fb_write_cell(0, 'A', FB_GREEN, FB_DARK_GREY);
 }
 
